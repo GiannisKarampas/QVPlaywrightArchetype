@@ -1,0 +1,126 @@
+name: Playwright Tests CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Test environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  test:
+    name: Run Playwright Tests
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit, api]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.project }}
+
+      - name: Run type check
+        run: npm run type-check
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run Playwright tests
+        env:
+          TEST_ENV: ${{ github.event.inputs.environment || 'staging' }}
+          CI: true
+        run: npm test -- --project=${{ matrix.project }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.project }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 30
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.project }}
+          path: allure-results/
+          retention-days: 30
+
+  report:
+    name: Generate Allure Report
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all Allure results
+        uses: actions/download-artifact@v4
+        with:
+          path: allure-results
+          pattern: allure-results-*
+          merge-multiple: true
+
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Deploy report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+
+  notify:
+    name: Notify Results
+    needs: [test, report]
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send notification
+        run: |
+          echo "Tests completed. Status: ${{ needs.test.result }}"

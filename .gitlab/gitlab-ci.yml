@@ -1,0 +1,109 @@
+image: mcr.microsoft.com/playwright:v1.57.0-jammy
+
+stages:
+  - install
+  - lint
+  - test
+  - report
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  PLAYWRIGHT_BROWSERS_PATH: "$CI_PROJECT_DIR/ms-playwright"
+  TEST_ENV: "staging"
+  HEADLESS: "true"
+
+cache:
+  paths:
+    - .npm/
+    - ms-playwright/
+    - node_modules/
+
+install:
+  stage: install
+  script:
+    - npm ci
+    - npx playwright install --with-deps
+  artifacts:
+    paths:
+      - node_modules/
+      - ms-playwright/
+    expire_in: 1 day
+
+lint:
+  stage: lint
+  needs: [install]
+  script:
+    - npm run type-check
+    - npm run lint
+  allow_failure: false
+
+test:chromium:
+  stage: test
+  needs: [install, lint]
+  script:
+    - npm test -- --project=chromium
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+      - allure-results/
+      - playwright-report/
+    expire_in: 30 days
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+
+test:firefox:
+  stage: test
+  needs: [install, lint]
+  script:
+    - npm test -- --project=firefox
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+      - allure-results/
+    expire_in: 30 days
+
+test:webkit:
+  stage: test
+  needs: [install, lint]
+  script:
+    - npm test -- --project=webkit
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+      - allure-results/
+    expire_in: 30 days
+
+test:api:
+  stage: test
+  needs: [install, lint]
+  script:
+    - npm test -- --project=api
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+      - allure-results/
+    expire_in: 30 days
+
+allure-report:
+  stage: report
+  needs:
+    - test:chromium
+    - test:firefox
+    - test:webkit
+    - test:api
+  when: always
+  script:
+    - npm install -g allure-commandline --save-dev
+    - allure generate allure-results --clean -o allure-report
+  artifacts:
+    paths:
+      - allure-report/
+    expire_in: 30 days
+  allow_failure: true

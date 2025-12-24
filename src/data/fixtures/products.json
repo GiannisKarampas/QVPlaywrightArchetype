@@ -1,0 +1,26 @@
+[
+  {
+    "id": "product-001",
+    "name": "Laptop Pro 2025",
+    "description": "High-performance laptop for professionals",
+    "price": 1299.99,
+    "category": "Electronics",
+    "inStock": true
+  },
+  {
+    "id": "product-002",
+    "name": "Wireless Mouse",
+    "description": "Ergonomic wireless mouse with precision tracking",
+    "price": 29.99,
+    "category": "Electronics",
+    "inStock": true
+  },
+  {
+    "id": "product-003",
+    "name": "Cotton T-Shirt",
+    "description": "Comfortable 100% cotton t-shirt",
+    "price": 19.99,
+    "category": "Clothing",
+    "inStock": false
+  }
+]

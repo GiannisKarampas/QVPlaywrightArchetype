@@ -1,0 +1,146 @@
+pipeline {
+    agent {
+        docker {
+            image 'mcr.microsoft.com/playwright:v1.57.0-jammy'
+            args '-u root:root --ipc=host'
+        }
+    }
+
+    parameters {
+        choice(
+            name: 'TEST_ENV',
+            choices: ['dev', 'staging', 'prod'],
+            description: 'Test environment'
+        )
+        choice(
+            name: 'BROWSER',
+            choices: ['chromium', 'firefox', 'webkit', 'all'],
+            description: 'Browser to run tests on'
+        )
+        booleanParam(
+            name: 'RUN_VISUAL_TESTS',
+            defaultValue: false,
+            description: 'Run visual regression tests'
+        )
+    }
+
+    environment {
+        CI = 'true'
+        HEADLESS = 'true'
+        TEST_ENV = "${params.TEST_ENV}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                sh 'git log -1'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm ci'
+                sh 'npx playwright install --with-deps'
+            }
+        }
+
+        stage('Code Quality') {
+            parallel {
+                stage('Type Check') {
+                    steps {
+                        sh 'npm run type-check'
+                    }
+                }
+                stage('Lint') {
+                    steps {
+                        sh 'npm run lint'
+                    }
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    if (params.BROWSER == 'all') {
+                        parallel(
+                            chromium: {
+                                sh 'npm test -- --project=chromium'
+                            },
+                            firefox: {
+                                sh 'npm test -- --project=firefox'
+                            },
+                            webkit: {
+                                sh 'npm test -- --project=webkit'
+                            },
+                            api: {
+                                sh 'npm test -- --project=api'
+                            }
+                        )
+                    } else {
+                        sh "npm test -- --project=${params.BROWSER}"
+                    }
+                }
+            }
+        }
+
+        stage('Visual Tests') {
+            when {
+                expression { params.RUN_VISUAL_TESTS == true }
+            }
+            steps {
+                sh 'npm run test:visual'
+            }
+        }
+
+        stage('Generate Reports') {
+            steps {
+                script {
+                    sh 'npm install -g allure-commandline --save-dev'
+                    sh 'allure generate allure-results --clean -o allure-report'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'test-results/**/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'playwright-report/**/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'allure-report/**/*', allowEmptyArchive: true
+
+            junit testResults: 'test-results/junit.xml', allowEmptyResults: true
+
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'playwright-report',
+                reportFiles: 'index.html',
+                reportName: 'Playwright Report'
+            ])
+
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'allure-report',
+                reportFiles: 'index.html',
+                reportName: 'Allure Report'
+            ])
+        }
+
+        success {
+            echo 'Tests passed successfully!'
+        }
+
+        failure {
+            echo 'Tests failed. Check the reports for details.'
+        }
+
+        cleanup {
+            cleanWs()
+        }
+    }
+}
