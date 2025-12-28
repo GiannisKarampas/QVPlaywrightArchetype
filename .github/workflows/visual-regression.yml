@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, develop]
   schedule:
-    - cron: '0 0 * * *'  # Daily at midnight
+    #- cron: '0 0 * * *'  # Daily at midnight
 
 jobs:
   visual-tests:

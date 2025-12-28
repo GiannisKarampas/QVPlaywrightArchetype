@@ -2,6 +2,9 @@ import { test, expect } from '@core/fixtures/api.fixture';
 import { AuthService } from '@services/auth/AuthService';
 import { env } from '@config/environment.config';
 import { UserFactory } from '@data/factories/user.factory';
+import { LoginResponseSchema } from '../../../src/types/api.schemas';
+import { validateAPIResponse } from '@core/utils/schema.utils';
+import logger from '@core/helpers/logger';
 
 test.describe('Authentication API Tests', () => {
   let authService: AuthService;
@@ -10,7 +13,7 @@ test.describe('Authentication API Tests', () => {
     authService = new AuthService(apiContext);
   });
 
-  test('should successfully login with valid credentials', async ({ logger }) => {
+  test('should successfully login with valid credentials @smoke @critical', async () => {
     const testUser = env.getTestUser();
 
     await test.step('Attempt login', async () => {
@@ -21,11 +24,19 @@ test.describe('Authentication API Tests', () => {
 
       logger.info('Login API response received');
 
-      await test.step('Verify response structure', async () => {
+      await test.step('Verify response status', async () => {
         expect(response.status).toBe(200);
-        expect(response.data).toHaveProperty('tokens');
-        expect(response.data).toHaveProperty('user');
-        expect(response.data.tokens).toHaveProperty('accessToken');
+      });
+
+      await test.step('Validate response schema', async () => {
+        // Schema validation - catches breaking API changes!
+        const validatedData = validateAPIResponse(LoginResponseSchema, response);
+
+        expect(validatedData).toHaveProperty('tokens');
+        expect(validatedData).toHaveProperty('user');
+        expect(validatedData.tokens.accessToken).toBeTruthy();
+
+        logger.info('Response schema validation passed');
       });
 
       await test.step('Verify user data', async () => {
@@ -34,7 +45,7 @@ test.describe('Authentication API Tests', () => {
     });
   });
 
-  test('should fail login with invalid credentials', async ({ apiContext, logger }) => {
+  test('should fail login with invalid credentials @regression', async ({ apiContext }) => {
     const authService = new AuthService(apiContext);
 
     await test.step('Attempt login with invalid credentials', async () => {
@@ -51,7 +62,7 @@ test.describe('Authentication API Tests', () => {
     });
   });
 
-  test('should successfully logout', async ({ authToken, logger }) => {
+  test('should successfully logout', async ({ authToken }) => {
     authService.setAuthToken(authToken);
 
     await test.step('Logout user', async () => {
@@ -61,7 +72,7 @@ test.describe('Authentication API Tests', () => {
     });
   });
 
-  test('should request password reset', async ({ logger }) => {
+  test('should request password reset', async () => {
     const email = UserFactory.createRequest().email;
 
     await test.step('Request password reset', async () => {
@@ -73,7 +84,7 @@ test.describe('Authentication API Tests', () => {
     });
   });
 
-  test('should verify valid token', async ({ authToken, logger }) => {
+  test('should verify valid token', async ({ authToken }) => {
     await test.step('Verify token', async () => {
       const response = await authService.verifyToken(authToken);
 

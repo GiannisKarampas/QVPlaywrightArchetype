@@ -6,7 +6,7 @@ import {
   IUpdateUserRequest,
   IAPIResponse,
   IPaginatedResponse,
-} from '@types/api.types';
+} from '../../types/api.types';
 import logger from '@core/helpers/logger';
 
 export class UserService extends BaseAPI {
@@ -52,10 +52,7 @@ export class UserService extends BaseAPI {
     return response;
   }
 
-  async updateUser(
-    userId: string,
-    userData: IUpdateUserRequest,
-  ): Promise<IAPIResponse<IUser>> {
+  async updateUser(userId: string, userData: IUpdateUserRequest): Promise<IAPIResponse<IUser>> {
     logger.info(`Updating user: ${userId}`);
 
     const response = await this.patch<IUser>(`/users/${userId}`, userData);

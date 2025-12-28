@@ -8,7 +8,8 @@ export class RegisterPage extends BasePage {
     lastNameInput: '[data-testid="last-name"], #lastName, input[name="lastName"]',
     emailInput: '[data-testid="email-input"], #email, input[name="email"]',
     passwordInput: '[data-testid="password-input"], #password, input[name="password"]',
-    confirmPasswordInput: '[data-testid="confirm-password"], #confirmPassword, input[name="confirmPassword"]',
+    confirmPasswordInput:
+      '[data-testid="confirm-password"], #confirmPassword, input[name="confirmPassword"]',
     registerButton: '[data-testid="register-button"], button[type="submit"]',
     termsCheckbox: '[data-testid="terms-checkbox"], input[name="terms"]',
     errorMessage: '[data-testid="error-message"], .error-message',

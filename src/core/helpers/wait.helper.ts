@@ -1,5 +1,5 @@
 import { Page } from '@playwright/test';
-import { IWaitOptions } from '@types/test.types';
+import { IWaitOptions } from '../../types/test.types';
 import logger from './logger';
 
 export class WaitHelper {
@@ -66,10 +66,7 @@ export class WaitHelper {
     }
   }
 
-  static async waitForNavigation(
-    page: Page,
-    options: IWaitOptions = {},
-  ): Promise<void> {
+  static async waitForNavigation(page: Page, options: IWaitOptions = {}): Promise<void> {
     const { timeout = 30000 } = options;
     logger.debug('Waiting for navigation');
 

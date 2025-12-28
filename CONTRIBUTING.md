@@ -106,6 +106,7 @@ test.describe('Feature Name', () => {
 - Use present tense
 
 Examples:
+
 - ✅ `should display error message with invalid credentials`
 - ✅ `should successfully create a new user`
 - ❌ `test login`

@@ -1,5 +1,6 @@
 import { test, devices } from '@playwright/test';
 import { VisualUtils } from '@core/utils/visual.utils';
+import logger from '@core/helpers/logger';
 
 test.describe('Responsive Design Visual Tests', () => {
   const viewports = [
@@ -9,7 +10,7 @@ test.describe('Responsive Design Visual Tests', () => {
   ];
 
   for (const viewport of viewports) {
-    test(`should match ${viewport.name} viewport`, async ({ browser, logger }) => {
+    test(`should match ${viewport.name} viewport`, async ({ browser }) => {
       const context = await browser.newContext({
         viewport: { width: viewport.width, height: viewport.height },
       });
@@ -33,7 +34,7 @@ test.describe('Responsive Design Visual Tests', () => {
     });
   }
 
-  test('should match on iPhone 12', async ({ browser, logger }) => {
+  test('should match on iPhone 12', async ({ browser }) => {
     const context = await browser.newContext(devices['iPhone 12']);
     const page = await context.newPage();
 
@@ -52,7 +53,7 @@ test.describe('Responsive Design Visual Tests', () => {
     await context.close();
   });
 
-  test('should match on iPad Pro', async ({ browser, logger }) => {
+  test('should match on iPad Pro', async ({ browser }) => {
     const context = await browser.newContext(devices['iPad Pro']);
     const page = await context.newPage();
 

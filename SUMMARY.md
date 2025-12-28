@@ -5,6 +5,7 @@
 ### 🔐 Global Authentication Setup
 
 **New Files:**
+
 1. **`global-setup.ts`** - Runs once before all tests
    - Authenticates regular user → `.auth/user.json`
    - Authenticates admin user → `.auth/admin.json`
@@ -71,13 +72,13 @@
 
 ### Before vs After
 
-| Metric | Before (Fixture) | After (Global Setup) | Improvement |
-|--------|------------------|---------------------|-------------|
-| **Auth executions** | 50 (one per test) | 1 (once total) | **98% reduction** |
-| **Auth time** | 150s (3s × 50) | 3s (once) | **147s saved** |
-| **Total test time** | ~300s | ~153s | **49% faster** ⚡ |
-| **Reliability** | 85% | 100% | **15% improvement** |
-| **Code complexity** | High | Low | **Simpler** ✨ |
+| Metric              | Before (Fixture)  | After (Global Setup) | Improvement         |
+| ------------------- | ----------------- | -------------------- | ------------------- |
+| **Auth executions** | 50 (one per test) | 1 (once total)       | **98% reduction**   |
+| **Auth time**       | 150s (3s × 50)    | 3s (once)            | **147s saved**      |
+| **Total test time** | ~300s             | ~153s                | **49% faster** ⚡   |
+| **Reliability**     | 85%               | 100%                 | **15% improvement** |
+| **Code complexity** | High              | Low                  | **Simpler** ✨      |
 
 ---
 
@@ -186,19 +187,22 @@ test('login flow', async ({ page }) => {
 ### ✅ DO
 
 1. **Use base Playwright test by default**
+
    ```typescript
    import { test } from '@playwright/test';
    ```
 
 2. **Use base.fixture only when you need logging**
+
    ```typescript
    import { test } from '@core/fixtures/base.fixture';
    ```
 
 3. **Override storageState for special cases**
+
    ```typescript
-   test.use({ storageState: '.auth/admin.json' });  // Admin
-   test.use({ storageState: undefined });           // No auth
+   test.use({ storageState: '.auth/admin.json' }); // Admin
+   test.use({ storageState: undefined }); // No auth
    ```
 
 4. **Leverage global-setup for speed**
@@ -209,11 +213,13 @@ test('login flow', async ({ page }) => {
 ### ❌ DON'T
 
 1. **Don't import deprecated page.fixture**
+
    ```typescript
    ❌ import { test } from '@core/fixtures/page.fixture';
    ```
 
 2. **Don't manually login in tests (unless testing login)**
+
    ```typescript
    ❌ await loginPage.login(...);  // Unless testing login flow
    ```
@@ -267,6 +273,7 @@ npm test
 ## 📦 What's Included
 
 ### New Files (7)
+
 - `global-setup.ts`
 - `global-teardown.ts`
 - `src/core/fixtures/base.fixture.ts`
@@ -276,6 +283,7 @@ npm test
 - `SUMMARY.md`
 
 ### Modified Files (6)
+
 - `playwright.config.ts`
 - `src/core/fixtures/page.fixture.ts` (deprecated)
 - `tests/ui/dashboard/dashboard.spec.ts`
@@ -285,6 +293,7 @@ npm test
 - `.gitignore`
 
 ### Generated Files (Runtime)
+
 - `.auth/user.json` (created by global-setup)
 - `.auth/admin.json` (created by global-setup)
 
@@ -356,6 +365,7 @@ npx playwright test --project=chromium-admin
 ## ✨ Summary
 
 The framework now uses **global-setup for authentication**, making it:
+
 - **Faster** (50% improvement)
 - **More reliable** (100% success rate)
 - **Simpler** (less code, clear patterns)

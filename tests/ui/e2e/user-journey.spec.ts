@@ -18,7 +18,12 @@ test.describe('End-to-End User Journey', () => {
 
     await test.step('Register new user', async () => {
       await registerPage.navigate();
-      await registerPage.register(newUser);
+      await registerPage.register({
+        firstName: newUser.firstName!,
+        lastName: newUser.lastName!,
+        email: newUser.email,
+        password: newUser.password,
+      });
       logger.info(`Registered new user: ${newUser.email}`);
     });
 

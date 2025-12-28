@@ -20,6 +20,11 @@
     "test:mobile": "playwright test --project=mobile-chrome",
     "test:parallel": "playwright test --workers=4",
     "test:serial": "playwright test --workers=1",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:critical": "playwright test --grep @critical",
+    "test:slow": "playwright test --grep @slow --workers=1",
+    "test:tag": "playwright test --grep",
     "report": "playwright show-report",
     "report:allure": "allure generate allure-results --clean && allure open",
     "report:allure-generate": "allure generate allure-results --clean -o allure-report",
@@ -31,7 +36,7 @@
     "type-check": "tsc --noEmit",
     "clean": "rm -rf allure-results allure-report playwright-report test-results",
     "pretest": "npm run type-check",
-    "prepare": "husky install",
+    "prepare": "husky",
     "docker:build": "docker build -f docker/Dockerfile -t playwright-tests .",
     "docker:run": "docker-compose -f docker/docker-compose.yml up",
     "docker:down": "docker-compose -f docker/docker-compose.yml down",
@@ -54,7 +59,8 @@
     "@faker-js/faker": "^9.2.0",
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

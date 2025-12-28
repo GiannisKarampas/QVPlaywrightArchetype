@@ -1,11 +1,8 @@
-import { IRetryOptions } from '@types/test.types';
+import { IRetryOptions } from '../../types/test.types';
 import logger from './logger';
 
 export class RetryHelper {
-  static async retry<T>(
-    fn: () => Promise<T>,
-    options: IRetryOptions,
-  ): Promise<T> {
+  static async retry<T>(fn: () => Promise<T>, options: IRetryOptions): Promise<T> {
     const { maxAttempts, delay, backoff = 'exponential', maxDelay = 30000 } = options;
     let lastError: Error | undefined;
 

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { IUser, ICreateUserRequest } from '@types/api.types';
+import { IUser, ICreateUserRequest } from '../../types/api.types';
 import { CryptoUtils } from './crypto.utils';
 
 export class FakerUtils {
@@ -115,8 +115,10 @@ export class FakerUtils {
     return faker.helpers.shuffle(array);
   }
 
-  static setLocale(locale: string): void {
-    faker.locale = locale;
+  static setLocale(_locale: string): void {
+    // Note: faker.locale is deprecated in newer versions
+    // Use faker.setDefaultRefDate() or locale-specific imports if needed
+    console.warn('setLocale is deprecated - use locale-specific faker imports');
   }
 
   static setSeed(seed: number): void {

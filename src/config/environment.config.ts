@@ -6,7 +6,7 @@ import {
   BrowserType,
   LogLevel,
   ITestUser,
-} from '@types/environment.types';
+} from '../types/environment.types';
 
 class EnvironmentConfig {
   private static instance: EnvironmentConfig;

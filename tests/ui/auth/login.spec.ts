@@ -16,7 +16,7 @@ test.describe('Login Tests', () => {
     await loginPage.navigate();
   });
 
-  test('should successfully login with valid credentials', async () => {
+  test('should successfully login with valid credentials @smoke @critical', async () => {
     const testUser = env.getTestUser();
 
     await test.step('Fill in login credentials', async () => {
@@ -33,7 +33,7 @@ test.describe('Login Tests', () => {
     });
   });
 
-  test('should show error with invalid credentials', async () => {
+  test('should show error with invalid credentials @regression', async () => {
     await test.step('Attempt login with invalid credentials', async () => {
       await loginPage.fillEmail('invalid@example.com');
       await loginPage.fillPassword('WrongPassword123!');

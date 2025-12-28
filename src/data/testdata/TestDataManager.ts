@@ -13,13 +13,7 @@ export class TestDataManager {
       return this.dataCache.get(fixtureName) as T;
     }
 
-    const fixturePath = path.join(
-      process.cwd(),
-      'src',
-      'data',
-      'fixtures',
-      `${fixtureName}.json`,
-    );
+    const fixturePath = path.join(process.cwd(), 'src', 'data', 'fixtures', `${fixtureName}.json`);
 
     const data = await FileUtils.readJSON<T>(fixturePath);
     this.dataCache.set(fixtureName, data);
@@ -44,13 +38,7 @@ export class TestDataManager {
   static async saveFixture(fixtureName: string, data: unknown): Promise<void> {
     logger.debug(`Saving fixture: ${fixtureName}`);
 
-    const fixturePath = path.join(
-      process.cwd(),
-      'src',
-      'data',
-      'fixtures',
-      `${fixtureName}.json`,
-    );
+    const fixturePath = path.join(process.cwd(), 'src', 'data', 'fixtures', `${fixtureName}.json`);
 
     await FileUtils.writeJSON(fixturePath, data);
     this.dataCache.set(fixtureName, data);

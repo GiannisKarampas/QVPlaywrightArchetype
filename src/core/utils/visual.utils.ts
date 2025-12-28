@@ -1,5 +1,5 @@
 import { Page, expect } from '@playwright/test';
-import { IVisualComparisonOptions, IScreenshotOptions } from '@types/test.types';
+import { IVisualComparisonOptions, IScreenshotOptions } from '../../types/test.types';
 import { env } from '@config/environment.config';
 import logger from '@core/helpers/logger';
 import * as path from 'path';
@@ -33,11 +33,7 @@ export class VisualUtils {
     name: string,
     options: IVisualComparisonOptions = {},
   ): Promise<void> {
-    const {
-      threshold = env.get('visualThreshold'),
-      maxDiffPixels,
-      fullPage = true,
-    } = options;
+    const { threshold = env.get('visualThreshold'), maxDiffPixels, fullPage = true } = options;
 
     logger.debug(`Comparing screenshot: ${name}`);
 
@@ -120,16 +116,13 @@ export class VisualUtils {
     logger.warn('Screenshot did not stabilize within timeout');
   }
 
-  static async maskElements(
-    page: Page,
-    selectors: string[],
-  ): Promise<void> {
+  static async maskElements(page: Page, selectors: string[]): Promise<void> {
     for (const selector of selectors) {
       try {
-        await page.locator(selector).evaluate((element: Element) => {
-          (element as HTMLElement).style.visibility = 'hidden';
+        await page.locator(selector).evaluate((element: any) => {
+          element.style.visibility = 'hidden';
         });
-      } catch (error) {
+      } catch {
         logger.warn(`Failed to mask element: ${selector}`);
       }
     }

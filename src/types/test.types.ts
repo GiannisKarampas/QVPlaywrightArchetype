@@ -1,4 +1,4 @@
-import { Page, APIRequestContext, Browser, BrowserContext } from '@playwright/test';
+import { Page, APIRequestContext, BrowserContext } from '@playwright/test';
 import { Logger } from 'winston';
 
 export interface ITestFixtures {

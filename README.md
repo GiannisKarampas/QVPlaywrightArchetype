@@ -92,7 +92,7 @@ npm run report:allure
 
 ## Project Structure
 
-```
+````
 QVPlaywrightArchetype/
 ├── src/
 │   ├── config/              # Environment configuration
@@ -142,7 +142,7 @@ test('should login successfully', async ({ page }) => {
 
   await expect(page).toHaveURL(/dashboard/);
 });
-```
+````
 
 ### API Testing Example
 
@@ -197,6 +197,7 @@ docker-compose -f docker/docker-compose.yml up allure-report-server
 ### GitHub Actions
 
 Workflow runs automatically on push/PR to main/develop branches.
+
 - Runs tests in parallel across browsers
 - Generates Allure reports
 - Deploys reports to GitHub Pages
@@ -204,6 +205,7 @@ Workflow runs automatically on push/PR to main/develop branches.
 ### GitLab CI
 
 Configure variables in GitLab CI/CD settings:
+
 - `TEST_ENV` - dev/staging/prod
 - `BASE_URL` - Application URL
 - `API_BASE_URL` - API URL
@@ -211,6 +213,7 @@ Configure variables in GitLab CI/CD settings:
 ### Jenkins
 
 Pipeline supports parameters:
+
 - Test Environment (dev/staging/prod)
 - Browser selection
 - Visual test toggle
@@ -258,15 +261,15 @@ TEST_ENV=dev VISUAL_UPDATE_SNAPSHOTS=true npm run test:visual
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `TEST_ENV` | Test environment (dev/staging/prod) | dev |
-| `BASE_URL` | Application base URL | https://example.com |
-| `API_BASE_URL` | API base URL | https://api.example.com |
-| `HEADLESS` | Run in headless mode | true |
-| `BROWSER` | Browser to use | chromium |
-| `WORKERS` | Parallel workers | 4 |
-| `RETRIES` | Test retries on failure | 2 |
+| Variable       | Description                         | Default                 |
+| -------------- | ----------------------------------- | ----------------------- |
+| `TEST_ENV`     | Test environment (dev/staging/prod) | dev                     |
+| `BASE_URL`     | Application base URL                | https://example.com     |
+| `API_BASE_URL` | API base URL                        | https://api.example.com |
+| `HEADLESS`     | Run in headless mode                | true                    |
+| `BROWSER`      | Browser to use                      | chromium                |
+| `WORKERS`      | Parallel workers                    | 4                       |
+| `RETRIES`      | Test retries on failure             | 2                       |
 
 See `.env.example` for complete list.
 
@@ -279,6 +282,78 @@ See `.env.example` for complete list.
 5. **Logging** - Comprehensive logging with Winston
 6. **Error Handling** - Graceful error handling with screenshots
 7. **Authentication** - StorageState reuse for faster tests
+
+## Pre-commit Hooks
+
+This project uses Husky to enforce code quality before commits and pushes.
+
+### Automatic Setup
+
+Pre-commit hooks are automatically installed when you run `npm install` (via the `prepare` script).
+
+### What Gets Checked
+
+**On `git commit` (.husky/pre-commit):**
+
+1. TypeScript type checking (`npm run type-check`)
+2. ESLint validation (`npm run lint`)
+3. Prettier formatting check (`npm run format:check`)
+
+**On `git push` (.husky/pre-push):**
+
+1. Smoke tests execution (`npm run test:smoke`)
+
+### Manual Hook Execution
+
+```bash
+# Test pre-commit hook
+.husky/pre-commit
+
+# Test pre-push hook
+.husky/pre-push
+```
+
+### Bypassing Hooks (Not Recommended)
+
+```bash
+# Skip pre-commit hook
+git commit --no-verify -m "message"
+
+# Skip pre-push hook
+git push --no-verify
+```
+
+### Fixing Common Issues
+
+**Type Check Failures:**
+
+```bash
+npm run type-check
+# Fix TypeScript errors, then commit again
+```
+
+**Linting Failures:**
+
+```bash
+npm run lint:fix
+git add .
+git commit -m "message"
+```
+
+**Formatting Failures:**
+
+```bash
+npm run format
+git add .
+git commit -m "message"
+```
+
+**Smoke Tests Failures:**
+
+```bash
+npm run test:smoke
+# Fix failing tests, then push again
+```
 
 ## Customization for Your Project
 
@@ -331,6 +406,7 @@ MIT
 ## Support
 
 For issues and questions:
+
 - Create an issue in this repository
 - Contact the QA Automation team
 

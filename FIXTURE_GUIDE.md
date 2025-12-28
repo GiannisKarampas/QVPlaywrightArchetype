@@ -27,12 +27,14 @@ import { test, expect } from '@playwright/test';
 ```
 
 **When to use:**
+
 - ✅ Simple tests that don't need extra functionality
 - ✅ API tests (no browser needed)
 - ✅ Visual tests (screenshots)
 - ✅ **Most UI tests** - Auth is already handled by global-setup!
 
 **Example:**
+
 ```typescript
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '@pages/auth/LoginPage';
@@ -58,12 +60,14 @@ import { test, expect } from '@core/fixtures/base.fixture';
 ```
 
 **When to use:**
+
 - ✅ Complex tests needing detailed logs
 - ✅ Debugging flaky tests
 - ✅ Tests with multiple steps
 - ✅ When you want browser console captured
 
 **What you get:**
+
 - `logger` - Winston logger instance
 - `testContext` - Test metadata (name, file, startTime)
 - Browser console capturing (errors, warnings)
@@ -71,6 +75,7 @@ import { test, expect } from '@core/fixtures/base.fixture';
 - Auto-log test start/end
 
 **Example:**
+
 ```typescript
 import { test, expect } from '@core/fixtures/base.fixture';
 import { DashboardPage } from '@pages/dashboard/DashboardPage';
@@ -99,15 +104,18 @@ import { test, expect } from '@core/fixtures/api.fixture';
 ```
 
 **When to use:**
+
 - ✅ API-only tests
 - ✅ Need authenticated API context
 - ✅ Testing backend services
 
 **What you get:**
+
 - `apiContext` - Configured API request context
 - `authToken` - Auto-obtained auth token
 
 **Example:**
+
 ```typescript
 import { test, expect } from '@core/fixtures/api.fixture';
 import { UserService } from '@services/users/UserService';
@@ -143,6 +151,7 @@ use: {
 ```
 
 **In your tests:**
+
 ```typescript
 import { test } from '@playwright/test';
 
@@ -158,11 +167,13 @@ test('authenticated test', async ({ page }) => {
 ### **Admin Tests**
 
 **Option 1: Use admin project**
+
 ```bash
 npx playwright test --project=chromium-admin
 ```
 
 **Option 2: Override in test file**
+
 ```typescript
 import { test } from '@playwright/test';
 
@@ -196,20 +207,21 @@ test('login flow', async ({ page }) => {
 
 ## 📋 Comparison Table
 
-| Scenario | Import | Authentication | Logger | Use Case |
-|----------|--------|---------------|---------|----------|
-| **Simple UI test** | `@playwright/test` | ✅ Auto (user) | ❌ | Most common |
-| **UI test with logging** | `@core/fixtures/base.fixture` | ✅ Auto (user) | ✅ | Debugging |
-| **Admin UI test** | `@playwright/test` + override | ✅ Auto (admin) | ❌ | Admin features |
-| **Login flow test** | `@playwright/test` + override | ❌ Disabled | ❌ | Auth testing |
-| **API test** | `@core/fixtures/api.fixture` | ✅ Token | ❌ | Backend testing |
-| **Visual test** | `@playwright/test` | ✅ Auto (user) | ❌ | Screenshots |
+| Scenario                 | Import                        | Authentication  | Logger | Use Case        |
+| ------------------------ | ----------------------------- | --------------- | ------ | --------------- |
+| **Simple UI test**       | `@playwright/test`            | ✅ Auto (user)  | ❌     | Most common     |
+| **UI test with logging** | `@core/fixtures/base.fixture` | ✅ Auto (user)  | ✅     | Debugging       |
+| **Admin UI test**        | `@playwright/test` + override | ✅ Auto (admin) | ❌     | Admin features  |
+| **Login flow test**      | `@playwright/test` + override | ❌ Disabled     | ❌     | Auth testing    |
+| **API test**             | `@core/fixtures/api.fixture`  | ✅ Token        | ❌     | Backend testing |
+| **Visual test**          | `@playwright/test`            | ✅ Auto (user)  | ❌     | Screenshots     |
 
 ---
 
 ## 🎯 Real-World Examples
 
 ### Example 1: Simple Authenticated Test
+
 ```typescript
 // tests/ui/dashboard/dashboard.spec.ts
 import { test, expect } from '@playwright/test';
@@ -223,6 +235,7 @@ test('dashboard loads', async ({ page }) => {
 ```
 
 ### Example 2: Complex Test with Logging
+
 ```typescript
 // tests/ui/complex-workflow.spec.ts
 import { test, expect } from '@core/fixtures/base.fixture';
@@ -251,6 +264,7 @@ test('complete checkout flow', async ({ page, logger }) => {
 ```
 
 ### Example 3: Admin Test
+
 ```typescript
 // tests/ui/admin/admin-panel.spec.ts
 import { test, expect } from '@playwright/test';
@@ -265,6 +279,7 @@ test('admin can access panel', async ({ page }) => {
 ```
 
 ### Example 4: Login Test (No Auth)
+
 ```typescript
 // tests/ui/auth/login.spec.ts
 import { test, expect } from '@playwright/test';
@@ -284,6 +299,7 @@ test('should login successfully', async ({ page }) => {
 ```
 
 ### Example 5: API Test
+
 ```typescript
 // tests/api/users/users.api.spec.ts
 import { test, expect } from '@core/fixtures/api.fixture';
@@ -304,6 +320,7 @@ test('should fetch user data', async ({ apiContext, authToken }) => {
 ## 🚀 Migration from Old Fixtures
 
 **Before (page.fixture.ts):**
+
 ```typescript
 import { test } from '@core/fixtures/page.fixture';
 
@@ -313,6 +330,7 @@ test('test', async ({ authenticatedPage }) => {
 ```
 
 **After (base Playwright test):**
+
 ```typescript
 import { test } from '@playwright/test';
 
@@ -326,22 +344,24 @@ test('test', async ({ page }) => {
 
 ## 📊 Performance Impact
 
-| Approach | Auth Time | Total Test Time (50 tests) |
-|----------|-----------|---------------------------|
-| **Old (Fixture per test)** | 3s × 50 = 150s | ~300s |
-| **New (Global Setup)** | 3s × 1 = 3s | ~153s |
-| **Savings** | | **~50% faster!** ⚡ |
+| Approach                   | Auth Time      | Total Test Time (50 tests) |
+| -------------------------- | -------------- | -------------------------- |
+| **Old (Fixture per test)** | 3s × 50 = 150s | ~300s                      |
+| **New (Global Setup)**     | 3s × 1 = 3s    | ~153s                      |
+| **Savings**                |                | **~50% faster!** ⚡        |
 
 ---
 
 ## ✅ Best Practices
 
 1. **Default to base Playwright test**
+
    ```typescript
    import { test } from '@playwright/test';
    ```
 
 2. **Use logger fixture for complex/flaky tests**
+
    ```typescript
    import { test } from '@core/fixtures/base.fixture';
    ```
@@ -349,6 +369,7 @@ test('test', async ({ page }) => {
 3. **Never import page.fixture.ts** - It's deprecated
 
 4. **For admin tests** - Use project or override:
+
    ```typescript
    test.use({ storageState: '.auth/admin.json' });
    ```

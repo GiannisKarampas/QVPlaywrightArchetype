@@ -61,7 +61,7 @@ export const test = base.extend<TestFixtures>({
     if (testInfo.status === 'failed' && env.get('screenshotOnFailure')) {
       const screenshotPath = testInfo.outputPath('failure-screenshot.png');
       await page.screenshot({ path: screenshotPath, fullPage: true });
-      testInfo.attach('failure-screenshot', {
+      void testInfo.attach('failure-screenshot', {
         path: screenshotPath,
         contentType: 'image/png',
       });

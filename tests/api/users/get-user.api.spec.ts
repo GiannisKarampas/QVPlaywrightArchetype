@@ -1,6 +1,7 @@
 import { test, expect } from '@core/fixtures/api.fixture';
 import { UserService } from '@services/users/UserService';
 import { UserFactory } from '@data/factories/user.factory';
+import logger from '@core/helpers/logger';
 
 test.describe('Get User API Tests', () => {
   let userService: UserService;
@@ -10,7 +11,7 @@ test.describe('Get User API Tests', () => {
     userService.setAuthToken(authToken);
   });
 
-  test('should get current user', async ({ logger }) => {
+  test('should get current user', async () => {
     await test.step('Get current user', async () => {
       const response = await userService.getCurrentUser();
 
@@ -21,7 +22,7 @@ test.describe('Get User API Tests', () => {
     });
   });
 
-  test('should get user by ID', async ({ logger }) => {
+  test('should get user by ID', async () => {
     let userId: string;
 
     await test.step('Create test user', async () => {
@@ -39,7 +40,7 @@ test.describe('Get User API Tests', () => {
     });
   });
 
-  test('should get list of users', async ({ logger }) => {
+  test('should get list of users', async () => {
     await test.step('Get users list', async () => {
       const response = await userService.getUsers({ page: 1, pageSize: 10 });
 
@@ -52,7 +53,7 @@ test.describe('Get User API Tests', () => {
     });
   });
 
-  test('should get users with pagination', async ({ logger }) => {
+  test('should get users with pagination', async () => {
     await test.step('Get first page', async () => {
       const page1 = await userService.getUsers({ page: 1, pageSize: 5 });
       expect(page1.data.page).toBe(1);
@@ -67,7 +68,7 @@ test.describe('Get User API Tests', () => {
     });
   });
 
-  test('should search users', async ({ logger }) => {
+  test('should search users', async () => {
     const searchQuery = 'test';
 
     await test.step('Search users', async () => {

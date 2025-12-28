@@ -13,7 +13,7 @@ export abstract class BaseComponent {
     this.root = page.locator(rootSelector);
   }
 
-  protected async isVisible(): Promise<boolean> {
+  public async isVisible(): Promise<boolean> {
     try {
       await this.root.waitFor({ state: 'visible', timeout: 5000 });
       return true;
@@ -64,15 +64,15 @@ export abstract class BaseComponent {
     return await this.locator(selector).count();
   }
 
-  protected async nth(selector: string, index: number): Locator {
+  protected nth(selector: string, index: number): Locator {
     return this.locator(selector).nth(index);
   }
 
-  protected async first(selector: string): Locator {
+  protected first(selector: string): Locator {
     return this.locator(selector).first();
   }
 
-  protected async last(selector: string): Locator {
+  protected last(selector: string): Locator {
     return this.locator(selector).last();
   }
 }

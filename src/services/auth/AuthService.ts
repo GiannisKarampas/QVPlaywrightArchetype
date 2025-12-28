@@ -1,11 +1,6 @@
 import { APIRequestContext } from '@playwright/test';
 import { BaseAPI } from '@core/base/BaseAPI';
-import {
-  ILoginRequest,
-  ILoginResponse,
-  IAuthTokens,
-  IAPIResponse,
-} from '@types/api.types';
+import { ILoginRequest, ILoginResponse, IAuthTokens, IAPIResponse } from '../../types/api.types';
 import logger from '@core/helpers/logger';
 
 export class AuthService extends BaseAPI {

@@ -1,5 +1,5 @@
 import { FakerUtils } from '@core/utils/faker.utils';
-import { IUser, ICreateUserRequest } from '@types/api.types';
+import { IUser, ICreateUserRequest } from '../../types/api.types';
 import { CryptoUtils } from '@core/utils/crypto.utils';
 
 export class UserFactory {

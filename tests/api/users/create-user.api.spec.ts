@@ -1,6 +1,9 @@
 import { test, expect } from '@core/fixtures/api.fixture';
 import { UserService } from '@services/users/UserService';
 import { UserFactory } from '@data/factories/user.factory';
+import { UserResponseSchema, CreateUserRequestSchema } from '../../../src/types/api.schemas';
+import { validate, validateAPIResponse } from '@core/utils/schema.utils';
+import logger from '@core/helpers/logger';
 
 test.describe('Create User API Tests', () => {
   let userService: UserService;
@@ -10,24 +13,38 @@ test.describe('Create User API Tests', () => {
     userService.setAuthToken(authToken);
   });
 
-  test('should successfully create a new user', async ({ logger }) => {
+  test('should successfully create a new user @smoke @critical', async () => {
     const newUser = UserFactory.createRequest();
+
+    await test.step('Validate request data', async () => {
+      // Validate request before sending
+      validate(CreateUserRequestSchema, newUser);
+      logger.debug('Request schema validation passed');
+    });
 
     await test.step('Create user', async () => {
       const response = await userService.createUser(newUser);
 
-      await test.step('Verify response', async () => {
+      await test.step('Verify response status', async () => {
         expect(response.status).toBe(201);
-        expect(response.data).toHaveProperty('id');
-        expect(response.data.email).toBe(newUser.email);
-        expect(response.data.firstName).toBe(newUser.firstName);
-        expect(response.data.lastName).toBe(newUser.lastName);
-        logger.info(`User created: ${response.data.id}`);
+      });
+
+      await test.step('Validate response schema', async () => {
+        // Validate response structure
+        const validatedData = validateAPIResponse(UserResponseSchema, response);
+
+        expect(validatedData.id).toBeTruthy();
+        expect(validatedData.email).toBe(newUser.email);
+        expect(validatedData.firstName).toBe(newUser.firstName);
+        expect(validatedData.lastName).toBe(newUser.lastName);
+
+        logger.info(`User created: ${validatedData.id}`);
+        logger.debug('Response schema validation passed');
       });
     });
   });
 
-  test('should create multiple users', async ({ logger }) => {
+  test('should create multiple users', async () => {
     const users = [
       UserFactory.createRequest(),
       UserFactory.createRequest(),
@@ -44,7 +61,7 @@ test.describe('Create User API Tests', () => {
     });
   });
 
-  test('should fail to create user with duplicate email', async ({ apiContext, logger }) => {
+  test('should fail to create user with duplicate email', async ({ apiContext }) => {
     const userService = new UserService(apiContext);
     const userData = UserFactory.createRequest();
 

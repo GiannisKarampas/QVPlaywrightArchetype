@@ -20,6 +20,7 @@ nano .env.dev
 ```
 
 **Required settings:**
+
 ```env
 BASE_URL=https://your-app.com
 API_BASE_URL=https://api.your-app.com
@@ -154,6 +155,7 @@ tests/
 ## 🔐 Authentication
 
 ### Regular Tests
+
 ```typescript
 // Already authenticated by default!
 test('test', async ({ page }) => {
@@ -162,6 +164,7 @@ test('test', async ({ page }) => {
 ```
 
 ### Admin Tests
+
 ```typescript
 test.use({ storageState: '.auth/admin.json' });
 
@@ -171,6 +174,7 @@ test('admin test', async ({ page }) => {
 ```
 
 ### Login Tests (No Auth)
+
 ```typescript
 test.use({ storageState: undefined });
 
@@ -213,6 +217,7 @@ test('login test', async ({ page }) => {
 ## 🐛 Troubleshooting
 
 ### Tests failing?
+
 ```bash
 # Check if auth files exist
 ls -la .auth/
@@ -225,11 +230,13 @@ npm run test:headed
 ```
 
 ### TypeScript errors?
+
 ```bash
 npm run type-check
 ```
 
 ### Need help?
+
 - Check `README.md` for detailed info
 - See `FIXTURE_GUIDE.md` for usage examples
 - Review test examples in `tests/` directory

@@ -39,11 +39,7 @@
     },
     "types": ["node", "@playwright/test"]
   },
-  "include": [
-    "src/**/*",
-    "tests/**/*",
-    "playwright.config.ts"
-  ],
+  "include": ["src/**/*", "tests/**/*", "playwright.config.ts"],
   "exclude": [
     "node_modules",
     "dist",

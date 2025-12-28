@@ -2,7 +2,7 @@ import { APIRequestContext, APIResponse } from '@playwright/test';
 import { env } from '@config/environment.config';
 import logger from '@core/helpers/logger';
 import { RetryHelper } from '@core/helpers/retry.helper';
-import { IAPIResponse, IAPIError, IAPIRequestConfig } from '@types/api.types';
+import { IAPIResponse, IAPIError, IAPIRequestConfig } from '../../types/api.types';
 
 export abstract class BaseAPI {
   protected apiContext: APIRequestContext;
@@ -109,21 +109,21 @@ export abstract class BaseAPI {
     return this.handleResponse<T>(response);
   }
 
-  protected setAuthToken(token: string): void {
+  public setAuthToken(token: string): void {
     this.defaultHeaders['Authorization'] = `Bearer ${token}`;
     logger.debug('Auth token set in default headers');
   }
 
-  protected removeAuthToken(): void {
+  public removeAuthToken(): void {
     delete this.defaultHeaders['Authorization'];
     logger.debug('Auth token removed from default headers');
   }
 
-  protected setHeader(key: string, value: string): void {
+  public setHeader(key: string, value: string): void {
     this.defaultHeaders[key] = value;
   }
 
-  protected removeHeader(key: string): void {
+  public removeHeader(key: string): void {
     delete this.defaultHeaders[key];
   }
 
@@ -186,11 +186,12 @@ export abstract class BaseAPI {
     };
   }
 
-  protected async expectStatus(response: IAPIResponse<unknown>, expectedStatus: number): Promise<void> {
+  protected async expectStatus(
+    response: IAPIResponse<unknown>,
+    expectedStatus: number,
+  ): Promise<void> {
     if (response.status !== expectedStatus) {
-      throw new Error(
-        `Expected status ${expectedStatus}, but got ${response.status}`,
-      );
+      throw new Error(`Expected status ${expectedStatus}, but got ${response.status}`);
     }
   }
 

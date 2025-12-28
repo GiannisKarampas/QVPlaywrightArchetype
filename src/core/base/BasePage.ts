@@ -3,7 +3,7 @@ import { env } from '@config/environment.config';
 import logger from '@core/helpers/logger';
 import { WaitHelper } from '@core/helpers/wait.helper';
 import { VisualUtils } from '@core/utils/visual.utils';
-import { IScreenshotOptions } from '@types/test.types';
+import { IScreenshotOptions } from '../../types/test.types';
 
 export abstract class BasePage {
   protected page: Page;
@@ -43,10 +43,7 @@ export abstract class BasePage {
     await this.page.getByText(text).click({ timeout: env.get('actionTimeout') });
   }
 
-  protected async clickByRole(
-    role: 'button' | 'link' | 'textbox',
-    name: string,
-  ): Promise<void> {
+  protected async clickByRole(role: 'button' | 'link' | 'textbox', name: string): Promise<void> {
     logger.debug(`Clicking ${role} with name: ${name}`);
     await this.page.getByRole(role, { name }).click({ timeout: env.get('actionTimeout') });
   }
@@ -183,11 +180,11 @@ export abstract class BasePage {
     return this.page.locator(selector);
   }
 
-  protected async getCurrentUrl(): Promise<string> {
+  public async getCurrentUrl(): Promise<string> {
     return this.page.url();
   }
 
-  protected async getTitle(): Promise<string> {
+  public async getTitle(): Promise<string> {
     return await this.page.title();
   }
 

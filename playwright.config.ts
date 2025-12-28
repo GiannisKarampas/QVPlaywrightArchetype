@@ -163,12 +163,13 @@ export default defineConfig({
 
   outputDir: 'test-results/',
 
-  webServer: process.env.START_LOCAL_SERVER === 'true'
-    ? {
-        command: 'npm run start:test',
-        url: process.env.BASE_URL || 'http://localhost:3000',
-        reuseExistingServer: !process.env.CI,
-        timeout: 120000,
-      }
-    : undefined,
+  webServer:
+    process.env.START_LOCAL_SERVER === 'true'
+      ? {
+          command: 'npm run start:test',
+          url: process.env.BASE_URL || 'http://localhost:3000',
+          reuseExistingServer: !process.env.CI,
+          timeout: 120000,
+        }
+      : undefined,
 });
