@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { IUser, ICreateUserRequest } from '../../types/api.types';
-import { CryptoUtils } from './crypto.utils';
+import { CryptoUtils } from '@core/utils/crypto.utils';
+import logger from '@core/helpers/logger';
 
 export class FakerUtils {
   static generateUser(): IUser {
@@ -118,7 +119,7 @@ export class FakerUtils {
   static setLocale(_locale: string): void {
     // Note: faker.locale is deprecated in newer versions
     // Use faker.setDefaultRefDate() or locale-specific imports if needed
-    console.warn('setLocale is deprecated - use locale-specific faker imports');
+    logger.warn('setLocale is deprecated - use locale-specific faker imports');
   }
 
   static setSeed(seed: number): void {

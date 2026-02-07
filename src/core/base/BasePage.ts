@@ -3,7 +3,9 @@ import { env } from '@config/environment.config';
 import logger from '@core/helpers/logger';
 import { WaitHelper } from '@core/helpers/wait.helper';
 import { VisualUtils } from '@core/utils/visual.utils';
+import { AccessibilityUtils } from '@core/utils/accessibility.utils';
 import { IScreenshotOptions } from '../../types/test.types';
+import { IA11yScanOptions, IA11yScanResult } from '@core/types/accessibility.types';
 
 export abstract class BasePage {
   protected page: Page;
@@ -186,6 +188,14 @@ export abstract class BasePage {
 
   public async getTitle(): Promise<string> {
     return await this.page.title();
+  }
+
+  public async checkAccessibility(options?: IA11yScanOptions): Promise<IA11yScanResult> {
+    return AccessibilityUtils.scanPage(this.page, options);
+  }
+
+  public async assertAccessible(options?: IA11yScanOptions): Promise<void> {
+    return AccessibilityUtils.assertNoViolations(this.page, options);
   }
 
   protected async expectVisible(selector: string): Promise<void> {

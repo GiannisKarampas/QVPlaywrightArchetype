@@ -59,6 +59,8 @@ class EnvironmentConfig {
       apiRetryDelay: parseInt(process.env.API_RETRY_DELAY || '1000', 10),
       visualThreshold: parseFloat(process.env.VISUAL_THRESHOLD || '0.2'),
       visualUpdateSnapshots: process.env.VISUAL_UPDATE_SNAPSHOTS === 'true',
+      a11yDefaultWcagLevel: process.env.A11Y_WCAG_LEVEL || 'wcag2aa',
+      a11yAutoScanOnNavigation: process.env.A11Y_AUTO_SCAN === 'true',
       ci: process.env.CI === 'true',
     };
   }

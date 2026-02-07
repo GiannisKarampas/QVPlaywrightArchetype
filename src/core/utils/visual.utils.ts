@@ -116,9 +116,15 @@ export class VisualUtils {
     logger.warn('Screenshot did not stabilize within timeout');
   }
 
+  /**
+   * Masks elements by setting their visibility to hidden
+   * @param page - Playwright page object
+   * @param selectors - Array of CSS selectors to mask
+   */
   static async maskElements(page: Page, selectors: string[]): Promise<void> {
     for (const selector of selectors) {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await page.locator(selector).evaluate((element: any) => {
           element.style.visibility = 'hidden';
         });

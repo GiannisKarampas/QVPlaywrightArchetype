@@ -1,26 +1,42 @@
 [
   {
-    "id": "product-001",
-    "name": "Laptop Pro 2025",
-    "description": "High-performance laptop for professionals",
+    "id": "product-1",
+    "name": "Laptop",
+    "description": "High-performance laptop for developers",
     "price": 1299.99,
     "category": "Electronics",
-    "inStock": true
+    "inStock": true,
+    "sku": "LAP-001",
+    "createdAt": "2024-01-01T00:00:00.000Z"
   },
   {
-    "id": "product-002",
+    "id": "product-2",
     "name": "Wireless Mouse",
     "description": "Ergonomic wireless mouse with precision tracking",
-    "price": 29.99,
-    "category": "Electronics",
-    "inStock": true
+    "price": 49.99,
+    "category": "Accessories",
+    "inStock": true,
+    "sku": "MOU-001",
+    "createdAt": "2024-01-02T00:00:00.000Z"
   },
   {
-    "id": "product-003",
-    "name": "Cotton T-Shirt",
-    "description": "Comfortable 100% cotton t-shirt",
-    "price": 19.99,
-    "category": "Clothing",
-    "inStock": false
+    "id": "product-3",
+    "name": "Mechanical Keyboard",
+    "description": "RGB mechanical keyboard with Cherry MX switches",
+    "price": 159.99,
+    "category": "Accessories",
+    "inStock": false,
+    "sku": "KEY-001",
+    "createdAt": "2024-01-03T00:00:00.000Z"
+  },
+  {
+    "id": "product-4",
+    "name": "USB-C Hub",
+    "description": "7-in-1 USB-C hub with HDMI and ethernet",
+    "price": 79.99,
+    "category": "Accessories",
+    "inStock": true,
+    "sku": "HUB-001",
+    "createdAt": "2024-01-04T00:00:00.000Z"
   }
 ]

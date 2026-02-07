@@ -3,6 +3,7 @@ import { env } from '@config/environment.config';
 import logger from '@core/helpers/logger';
 import { RetryHelper } from '@core/helpers/retry.helper';
 import { IAPIResponse, IAPIError, IAPIRequestConfig } from '../../types/api.types';
+import { APIError } from '@core/errors/CustomErrors';
 
 export abstract class BaseAPI {
   protected apiContext: APIRequestContext;
@@ -165,7 +166,14 @@ export abstract class BaseAPI {
       }
     } catch (error) {
       logger.error('Failed to parse response body', error);
-      throw new Error(`Failed to parse response: ${(error as Error).message}`);
+      throw new APIError(
+        `Failed to parse response: ${(error as Error).message}`,
+        status,
+        response.url(),
+        'UNKNOWN',
+        undefined,
+        { originalError: error },
+      );
     }
 
     if (status >= 400) {
@@ -175,7 +183,18 @@ export abstract class BaseAPI {
         details: data,
       };
       logger.error(`API Error: ${status} - ${statusText}`, apiError);
-      throw new Error(`API request failed: ${status} ${statusText}`);
+      throw new APIError(
+        statusText || 'API request failed',
+        status,
+        response.url(),
+        'UNKNOWN',
+        data,
+        {
+          status,
+          message: statusText,
+          details: data,
+        },
+      );
     }
 
     return {

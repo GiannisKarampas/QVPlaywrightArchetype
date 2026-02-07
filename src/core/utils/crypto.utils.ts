@@ -54,22 +54,39 @@ export class CryptoUtils {
     return password;
   }
 
+  /**
+   * Encrypts text using AES-256-CBC with a random salt and IV
+   * @param text - Text to encrypt
+   * @param secretKey - Secret key for encryption
+   * @returns Encrypted text in format: salt:iv:ciphertext
+   */
   static encrypt(text: string, secretKey: string): string {
     const algorithm = 'aes-256-cbc';
-    const key = crypto.scryptSync(secretKey, 'salt', 32);
+    // Generate random salt for each encryption
+    const salt = crypto.randomBytes(16);
+    const key = crypto.scryptSync(secretKey, salt, 32);
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(algorithm, key, iv);
 
     let encrypted = cipher.update(text, 'utf8', 'hex');
     encrypted += cipher.final('hex');
 
-    return `${iv.toString('hex')}:${encrypted}`;
+    // Return salt:iv:ciphertext format
+    return `${salt.toString('hex')}:${iv.toString('hex')}:${encrypted}`;
   }
 
+  /**
+   * Decrypts text encrypted with the encrypt method
+   * @param encryptedText - Encrypted text in format: salt:iv:ciphertext
+   * @param secretKey - Secret key used for encryption
+   * @returns Decrypted text
+   */
   static decrypt(encryptedText: string, secretKey: string): string {
     const algorithm = 'aes-256-cbc';
-    const [ivHex, encrypted] = encryptedText.split(':');
-    const key = crypto.scryptSync(secretKey, 'salt', 32);
+    // Extract salt, IV, and ciphertext
+    const [saltHex, ivHex, encrypted] = encryptedText.split(':');
+    const salt = Buffer.from(saltHex, 'hex');
+    const key = crypto.scryptSync(secretKey, salt, 32);
     const iv = Buffer.from(ivHex, 'hex');
     const decipher = crypto.createDecipheriv(algorithm, key, iv);
 

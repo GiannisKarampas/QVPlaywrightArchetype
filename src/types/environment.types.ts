@@ -24,6 +24,8 @@ export interface IEnvironmentConfig {
   apiRetryDelay: number;
   visualThreshold: number;
   visualUpdateSnapshots: boolean;
+  a11yDefaultWcagLevel: string;
+  a11yAutoScanOnNavigation: boolean;
   ci: boolean;
 }
 

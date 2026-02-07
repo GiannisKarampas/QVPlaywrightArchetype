@@ -1,5 +1,5 @@
 import { IRetryOptions } from '../../types/test.types';
-import logger from './logger';
+import logger from '@core/helpers/logger';
 
 export class RetryHelper {
   static async retry<T>(fn: () => Promise<T>, options: IRetryOptions): Promise<T> {

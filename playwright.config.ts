@@ -91,7 +91,7 @@ export default defineConfig({
         storageState: '.auth/user.json',
       },
       testMatch: /.*\.spec\.ts/,
-      testIgnore: [/.*\.api\.spec\.ts/, /.*admin.*\.spec\.ts/],
+      testIgnore: [/.*\.api\.spec\.ts/, /.*admin.*\.spec\.ts/, /.*\.a11y\.spec\.ts/],
       dependencies: ['setup'],
     },
 
@@ -113,7 +113,7 @@ export default defineConfig({
         storageState: '.auth/user.json',
       },
       testMatch: /.*\.spec\.ts/,
-      testIgnore: [/.*\.api\.spec\.ts/, /.*admin.*\.spec\.ts/],
+      testIgnore: [/.*\.api\.spec\.ts/, /.*admin.*\.spec\.ts/, /.*\.a11y\.spec\.ts/],
       dependencies: ['setup'],
     },
 
@@ -124,7 +124,7 @@ export default defineConfig({
         storageState: '.auth/user.json',
       },
       testMatch: /.*\.spec\.ts/,
-      testIgnore: [/.*\.api\.spec\.ts/, /.*admin.*\.spec\.ts/],
+      testIgnore: [/.*\.api\.spec\.ts/, /.*admin.*\.spec\.ts/, /.*\.a11y\.spec\.ts/],
       dependencies: ['setup'],
     },
 
@@ -150,6 +150,17 @@ export default defineConfig({
         ...devices['iPad Pro'],
       },
       testMatch: /.*visual.*\.spec\.ts/,
+    },
+
+    {
+      name: 'accessibility',
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chrome',
+        storageState: '.auth/user.json',
+      },
+      testMatch: /.*\.a11y\.spec\.ts/,
+      dependencies: ['setup'],
     },
 
     {

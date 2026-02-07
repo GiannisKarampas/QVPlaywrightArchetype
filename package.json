@@ -12,6 +12,7 @@
     "test:ui": "playwright test tests/ui --project=chromium",
     "test:api": "playwright test tests/api --project=api",
     "test:visual": "playwright test tests/visual",
+    "test:a11y": "playwright test tests/accessibility --project=accessibility",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "test:chrome": "playwright test --project=chromium",
@@ -63,6 +64,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@playwright/test": "^1.57.0",
     "@types/node": "^22.10.2",
     "@typescript-eslint/eslint-plugin": "^8.19.1",

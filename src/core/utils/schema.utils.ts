@@ -1,4 +1,4 @@
-import { z, ZodSchema, ZodObject } from 'zod';
+import { z, ZodSchema, ZodObject, ZodRawShape } from 'zod';
 import logger from '@core/helpers/logger';
 import { IAPIResponse } from '../../types/api.types';
 
@@ -73,13 +73,16 @@ export class SchemaValidator {
 
   /**
    * Validate partial object (useful for PATCH requests)
+   * @param schema - Zod object schema to validate against
+   * @param data - Data to validate
+   * @returns Validated partial data
    */
-  static validatePartial<T extends Record<string, any>>(
-    schema: ZodObject<any>,
+  static validatePartial<T extends ZodRawShape>(
+    schema: ZodObject<T>,
     data: unknown,
-  ): Partial<T> {
+  ): Partial<z.infer<ZodObject<T>>> {
     const partialSchema = schema.partial();
-    return this.validate(partialSchema, data) as Partial<T>;
+    return this.validate(partialSchema, data);
   }
 
   /**

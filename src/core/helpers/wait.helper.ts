@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 import { IWaitOptions } from '../../types/test.types';
-import logger from './logger';
+import logger from '@core/helpers/logger';
 
 export class WaitHelper {
   static async waitForCondition(
